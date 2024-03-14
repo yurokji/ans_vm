@@ -177,9 +177,9 @@ void VirtualMachine::handleInterrupt(std::uint64_t intNumber) {
         case PRINT_INT:
             std::cout << int_registers[0];
             break;
-        case PRINT_FLOAT:
-            std::cout << float_registers[0];
-            break;
+        // case PRINT_FLOAT:
+        //     std::cout << float_registers[0];
+        //     break;
         default:
             std::cerr << "Unknown interrupt: " << intNumber << std::endl;
     }

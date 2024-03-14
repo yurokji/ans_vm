@@ -8,8 +8,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/root/project/compiler/ans/src/vm.cpp" "CMakeFiles/VirtualMachine.dir/src/vm.cpp.o" "gcc" "CMakeFiles/VirtualMachine.dir/src/vm.cpp.o.d"
-  "/root/project/compiler/ans/src/vm_display_test.cpp" "CMakeFiles/VirtualMachine.dir/src/vm_display_test.cpp.o" "gcc" "CMakeFiles/VirtualMachine.dir/src/vm_display_test.cpp.o.d"
+  "/home/david/ans_vm/src/main.cpp" "CMakeFiles/VirtualMachine.dir/src/main.cpp.o" "gcc" "CMakeFiles/VirtualMachine.dir/src/main.cpp.o.d"
+  "/home/david/ans_vm/src/vm.cpp" "CMakeFiles/VirtualMachine.dir/src/vm.cpp.o" "gcc" "CMakeFiles/VirtualMachine.dir/src/vm.cpp.o.d"
   )
 
 # Targets to which this target links.

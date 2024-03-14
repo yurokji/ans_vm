@@ -1,7 +1,6 @@
-CMakeFiles/VirtualMachine.dir/src/vm_display_test.cpp.o: \
- /root/project/compiler/ans/src/vm_display_test.cpp \
- /usr/include/stdc-predef.h /root/project/compiler/ans/include/vm.h \
- /usr/include/c++/11/cstdint \
+CMakeFiles/VirtualMachine.dir/src/main.cpp.o: \
+ /home/david/ans_vm/src/main.cpp /usr/include/stdc-predef.h \
+ /home/david/ans_vm/include/vm.h /usr/include/c++/11/cstdint \
  /usr/include/x86_64-linux-gnu/c++/11/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/11/bits/os_defines.h \
  /usr/include/features.h /usr/include/features-time64.h \
@@ -273,7 +272,8 @@ CMakeFiles/VirtualMachine.dir/src/vm_display_test.cpp.o: \
  /usr/include/c++/11/ratio /usr/include/c++/11/bits/parse_numbers.h \
  /usr/include/c++/11/thread /usr/include/c++/11/bits/std_thread.h \
  /usr/include/c++/11/bits/this_thread_sleep.h \
- /root/project/compiler/ans/include/virtual_display.h \
+ /home/david/ans_vm/include/virtual_display.h \
+ /home/david/ans_vm/include/instruction.h /usr/include/c++/11/bitset \
  /usr/include/c++/11/queue /usr/include/c++/11/deque \
  /usr/include/c++/11/bits/stl_deque.h /usr/include/c++/11/bits/deque.tcc \
  /usr/include/c++/11/bits/stl_queue.h /usr/include/c++/11/mutex \

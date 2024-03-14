@@ -1,12 +1,12 @@
 [
 {
-  "directory": "/root/project/compiler/ans/build",
-  "command": "/usr/bin/g++  -I/root/project/compiler/ans/include -O2 -g -DNDEBUG -DGTEST_HAS_PTHREAD=1 -std=gnu++17 -o CMakeFiles/VirtualMachine.dir/src/vm.cpp.o -c /root/project/compiler/ans/src/vm.cpp",
-  "file": "/root/project/compiler/ans/src/vm.cpp"
+  "directory": "/home/david/ans_vm/build",
+  "command": "/usr/bin/g++  -I/home/david/ans_vm/include -O2 -g -DNDEBUG -DGTEST_HAS_PTHREAD=1 -std=gnu++17 -o CMakeFiles/VirtualMachine.dir/src/vm.cpp.o -c /home/david/ans_vm/src/vm.cpp",
+  "file": "/home/david/ans_vm/src/vm.cpp"
 },
 {
-  "directory": "/root/project/compiler/ans/build",
-  "command": "/usr/bin/g++  -I/root/project/compiler/ans/include -O2 -g -DNDEBUG -DGTEST_HAS_PTHREAD=1 -std=gnu++17 -o CMakeFiles/VirtualMachine.dir/src/vm_display_test.cpp.o -c /root/project/compiler/ans/src/vm_display_test.cpp",
-  "file": "/root/project/compiler/ans/src/vm_display_test.cpp"
+  "directory": "/home/david/ans_vm/build",
+  "command": "/usr/bin/g++  -I/home/david/ans_vm/include -O2 -g -DNDEBUG -DGTEST_HAS_PTHREAD=1 -std=gnu++17 -o CMakeFiles/VirtualMachine.dir/src/main.cpp.o -c /home/david/ans_vm/src/main.cpp",
+  "file": "/home/david/ans_vm/src/main.cpp"
 }
 ]

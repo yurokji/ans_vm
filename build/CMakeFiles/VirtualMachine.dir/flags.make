@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/g++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/root/project/compiler/ans/include
+CXX_INCLUDES = -I/home/david/ans_vm/include
 
 CXX_FLAGS = -O2 -g -DNDEBUG -DGTEST_HAS_PTHREAD=1 -std=gnu++17
 

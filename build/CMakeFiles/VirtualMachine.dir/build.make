@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /root/project/compiler/ans
+CMAKE_SOURCE_DIR = /home/david/ans_vm
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /root/project/compiler/ans/build
+CMAKE_BINARY_DIR = /home/david/ans_vm/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/VirtualMachine.dir/depend.make
@@ -72,41 +72,41 @@ include CMakeFiles/VirtualMachine.dir/flags.make
 CMakeFiles/VirtualMachine.dir/src/vm.cpp.o: CMakeFiles/VirtualMachine.dir/flags.make
 CMakeFiles/VirtualMachine.dir/src/vm.cpp.o: ../src/vm.cpp
 CMakeFiles/VirtualMachine.dir/src/vm.cpp.o: CMakeFiles/VirtualMachine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/root/project/compiler/ans/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/VirtualMachine.dir/src/vm.cpp.o"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/VirtualMachine.dir/src/vm.cpp.o -MF CMakeFiles/VirtualMachine.dir/src/vm.cpp.o.d -o CMakeFiles/VirtualMachine.dir/src/vm.cpp.o -c /root/project/compiler/ans/src/vm.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/david/ans_vm/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/VirtualMachine.dir/src/vm.cpp.o"
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/VirtualMachine.dir/src/vm.cpp.o -MF CMakeFiles/VirtualMachine.dir/src/vm.cpp.o.d -o CMakeFiles/VirtualMachine.dir/src/vm.cpp.o -c /home/david/ans_vm/src/vm.cpp
 
 CMakeFiles/VirtualMachine.dir/src/vm.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/VirtualMachine.dir/src/vm.cpp.i"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /root/project/compiler/ans/src/vm.cpp > CMakeFiles/VirtualMachine.dir/src/vm.cpp.i
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/david/ans_vm/src/vm.cpp > CMakeFiles/VirtualMachine.dir/src/vm.cpp.i
 
 CMakeFiles/VirtualMachine.dir/src/vm.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/VirtualMachine.dir/src/vm.cpp.s"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /root/project/compiler/ans/src/vm.cpp -o CMakeFiles/VirtualMachine.dir/src/vm.cpp.s
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/david/ans_vm/src/vm.cpp -o CMakeFiles/VirtualMachine.dir/src/vm.cpp.s
 
-CMakeFiles/VirtualMachine.dir/src/vm_display_test.cpp.o: CMakeFiles/VirtualMachine.dir/flags.make
-CMakeFiles/VirtualMachine.dir/src/vm_display_test.cpp.o: ../src/vm_display_test.cpp
-CMakeFiles/VirtualMachine.dir/src/vm_display_test.cpp.o: CMakeFiles/VirtualMachine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/root/project/compiler/ans/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/VirtualMachine.dir/src/vm_display_test.cpp.o"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/VirtualMachine.dir/src/vm_display_test.cpp.o -MF CMakeFiles/VirtualMachine.dir/src/vm_display_test.cpp.o.d -o CMakeFiles/VirtualMachine.dir/src/vm_display_test.cpp.o -c /root/project/compiler/ans/src/vm_display_test.cpp
+CMakeFiles/VirtualMachine.dir/src/main.cpp.o: CMakeFiles/VirtualMachine.dir/flags.make
+CMakeFiles/VirtualMachine.dir/src/main.cpp.o: ../src/main.cpp
+CMakeFiles/VirtualMachine.dir/src/main.cpp.o: CMakeFiles/VirtualMachine.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/david/ans_vm/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/VirtualMachine.dir/src/main.cpp.o"
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/VirtualMachine.dir/src/main.cpp.o -MF CMakeFiles/VirtualMachine.dir/src/main.cpp.o.d -o CMakeFiles/VirtualMachine.dir/src/main.cpp.o -c /home/david/ans_vm/src/main.cpp
 
-CMakeFiles/VirtualMachine.dir/src/vm_display_test.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/VirtualMachine.dir/src/vm_display_test.cpp.i"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /root/project/compiler/ans/src/vm_display_test.cpp > CMakeFiles/VirtualMachine.dir/src/vm_display_test.cpp.i
+CMakeFiles/VirtualMachine.dir/src/main.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/VirtualMachine.dir/src/main.cpp.i"
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/david/ans_vm/src/main.cpp > CMakeFiles/VirtualMachine.dir/src/main.cpp.i
 
-CMakeFiles/VirtualMachine.dir/src/vm_display_test.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/VirtualMachine.dir/src/vm_display_test.cpp.s"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /root/project/compiler/ans/src/vm_display_test.cpp -o CMakeFiles/VirtualMachine.dir/src/vm_display_test.cpp.s
+CMakeFiles/VirtualMachine.dir/src/main.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/VirtualMachine.dir/src/main.cpp.s"
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/david/ans_vm/src/main.cpp -o CMakeFiles/VirtualMachine.dir/src/main.cpp.s
 
 # Object files for target VirtualMachine
 VirtualMachine_OBJECTS = \
 "CMakeFiles/VirtualMachine.dir/src/vm.cpp.o" \
-"CMakeFiles/VirtualMachine.dir/src/vm_display_test.cpp.o"
+"CMakeFiles/VirtualMachine.dir/src/main.cpp.o"
 
 # External object files for target VirtualMachine
 VirtualMachine_EXTERNAL_OBJECTS =
 
 VirtualMachine: CMakeFiles/VirtualMachine.dir/src/vm.cpp.o
-VirtualMachine: CMakeFiles/VirtualMachine.dir/src/vm_display_test.cpp.o
+VirtualMachine: CMakeFiles/VirtualMachine.dir/src/main.cpp.o
 VirtualMachine: CMakeFiles/VirtualMachine.dir/build.make
 VirtualMachine: /usr/lib/x86_64-linux-gnu/libsfml-graphics.so.2.5.1
 VirtualMachine: /usr/lib/x86_64-linux-gnu/libsfml-audio.so.2.5.1
@@ -114,7 +114,7 @@ VirtualMachine: /usr/lib/x86_64-linux-gnu/libgtest.a
 VirtualMachine: /usr/lib/x86_64-linux-gnu/libsfml-window.so.2.5.1
 VirtualMachine: /usr/lib/x86_64-linux-gnu/libsfml-system.so.2.5.1
 VirtualMachine: CMakeFiles/VirtualMachine.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/root/project/compiler/ans/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable VirtualMachine"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/david/ans_vm/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable VirtualMachine"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/VirtualMachine.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -126,6 +126,6 @@ CMakeFiles/VirtualMachine.dir/clean:
 .PHONY : CMakeFiles/VirtualMachine.dir/clean
 
 CMakeFiles/VirtualMachine.dir/depend:
-	cd /root/project/compiler/ans/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /root/project/compiler/ans /root/project/compiler/ans /root/project/compiler/ans/build /root/project/compiler/ans/build /root/project/compiler/ans/build/CMakeFiles/VirtualMachine.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/david/ans_vm/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/david/ans_vm /home/david/ans_vm /home/david/ans_vm/build /home/david/ans_vm/build /home/david/ans_vm/build/CMakeFiles/VirtualMachine.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/VirtualMachine.dir/depend
 

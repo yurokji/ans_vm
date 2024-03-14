@@ -1,8 +1,8 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/VirtualMachine.dir/src/main.cpp.o"
+  "CMakeFiles/VirtualMachine.dir/src/main.cpp.o.d"
   "CMakeFiles/VirtualMachine.dir/src/vm.cpp.o"
   "CMakeFiles/VirtualMachine.dir/src/vm.cpp.o.d"
-  "CMakeFiles/VirtualMachine.dir/src/vm_display_test.cpp.o"
-  "CMakeFiles/VirtualMachine.dir/src/vm_display_test.cpp.o.d"
   "VirtualMachine"
   "VirtualMachine.pdb"
 )

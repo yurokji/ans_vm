@@ -54,10 +54,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /root/project/compiler/ans
+CMAKE_SOURCE_DIR = /home/david/ans_vm
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /root/project/compiler/ans/build
+CMAKE_BINARY_DIR = /home/david/ans_vm/build
 
 #=============================================================================
 # Directory level rules for the build root directory
@@ -81,14 +81,14 @@ clean: CMakeFiles/VirtualMachine.dir/clean
 CMakeFiles/VirtualMachine.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/VirtualMachine.dir/build.make CMakeFiles/VirtualMachine.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/VirtualMachine.dir/build.make CMakeFiles/VirtualMachine.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/root/project/compiler/ans/build/CMakeFiles --progress-num=1,2,3 "Built target VirtualMachine"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/david/ans_vm/build/CMakeFiles --progress-num=1,2,3 "Built target VirtualMachine"
 .PHONY : CMakeFiles/VirtualMachine.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/VirtualMachine.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /root/project/compiler/ans/build/CMakeFiles 3
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/david/ans_vm/build/CMakeFiles 3
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/VirtualMachine.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /root/project/compiler/ans/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/david/ans_vm/build/CMakeFiles 0
 .PHONY : CMakeFiles/VirtualMachine.dir/rule
 
 # Convenience name for target.

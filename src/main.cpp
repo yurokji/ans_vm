@@ -16,7 +16,7 @@ const unsigned int SCREEN_HEIGHT = 512;
 
 int main() {
 
-    sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Virtual VGA Display");
+    sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Virtual Machine");
 
 
     sf::Texture texture;
@@ -25,47 +25,35 @@ int main() {
 
 
 
-    int main() {
     // Example 64-bit variable
+    std::vector<std::pair<ByteCode, std::uint64_t>> bytecode;
     
 
     
-
-
-    
-
-
-
-    // std::vector<std::pair<ByteCode, std::uint64_t>> bytecode;
-    
-    uint64_t variable = 0x123456789ABCDEF0;
-    Instruction instruction(variable);
-
-    
-    bytecode.push_back({SETH, vm.encodeRegisterAndImmediate(0, 0)});
-    bytecode.push_back({SETL, vm.encodeRegisterAndImmediate(0, 0)});
+    bytecode.push_back({SET, vm.encodeRegisterAndImmediate(0, 0)});
     bytecode.push_back({LOAD, 0});        // Load the interrupt value from memory
-    bytecode.push_back({SETL, vm.encodeRegisterAndImmediate(2, 0)});
-    bytecode.push_back({SETL, vm.encodeRegisterAndImmediate(3, 1)});
+    bytecode.push_back({SET, vm.encodeRegisterAndImmediate(2, 0)});
+    bytecode.push_back({SET, vm.encodeRegisterAndImmediate(3, 1)});
     bytecode.push_back({LOAD, vm.encodeTwoRegisters(0, 2)});
     bytecode.push_back({INT, PRINT_CHAR});
     bytecode.push_back({ADD, vm.encodeThreeRegisters(2, 2, 3)});
     bytecode.push_back({LOAD, vm.encodeTwoRegisters(0, 2)});
 
+    int ascii_val;
     for (int k=0; k < 100; k++) {
         for (int i=0; i < 16; i++) {
             for (int j=0; j < 16; j++) {
                 
-                int ascii_val;
+                
                 if(k % 2 == 0) {
                     ascii_val = i * 16 + j;
                     }
                 else{
                     ascii_val = 255 - i * 16 + j;
                 }
-                bytecode.push_back({SETL, vm.encodeRegisterAndImmediate(1, ascii_val)});
-                bytecode.push_back({SETL, vm.encodeRegisterAndImmediate(2, j)});
-                bytecode.push_back({SETL, vm.encodeRegisterAndImmediate(3, i)});
+                bytecode.push_back({SET, vm.encodeRegisterAndImmediate(1, ascii_val)});
+                bytecode.push_back({SET, vm.encodeRegisterAndImmediate(2, j)});
+                bytecode.push_back({SET, vm.encodeRegisterAndImmediate(3, i)});
                 bytecode.push_back({INT, VGA_UPDATE});
                 
             }
@@ -95,19 +83,6 @@ int main() {
     // Launch a separate thread
     sf::Thread thread(threadFunction);
     thread.launch();
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

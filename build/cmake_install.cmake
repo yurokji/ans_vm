@@ -1,4 +1,4 @@
-# Install script for directory: /root/project/compiler/ans
+# Install script for directory: /home/david/ans_vm
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -50,5 +50,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/root/project/compiler/ans/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/david/ans_vm/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

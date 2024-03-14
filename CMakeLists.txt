@@ -19,7 +19,7 @@ find_package(GTest REQUIRED)
 # 소스 파일을 변수에 추가합니다.
 set(SOURCES
     src/vm.cpp
-    src/vm_display_test.cpp
+    src/main.cpp
 )
 
 # SFML을 찾도록 CMake에 지시합니다.

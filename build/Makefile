@@ -57,10 +57,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /root/project/compiler/ans
+CMAKE_SOURCE_DIR = /home/david/ans_vm
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /root/project/compiler/ans/build
+CMAKE_BINARY_DIR = /home/david/ans_vm/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /root/project/compiler/ans/build/CMakeFiles /root/project/compiler/ans/build//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/david/ans_vm/build/CMakeFiles /home/david/ans_vm/build//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /root/project/compiler/ans/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/david/ans_vm/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -129,6 +129,30 @@ VirtualMachine/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/VirtualMachine.dir/build.make CMakeFiles/VirtualMachine.dir/build
 .PHONY : VirtualMachine/fast
 
+src/main.o: src/main.cpp.o
+.PHONY : src/main.o
+
+# target to build an object file
+src/main.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VirtualMachine.dir/build.make CMakeFiles/VirtualMachine.dir/src/main.cpp.o
+.PHONY : src/main.cpp.o
+
+src/main.i: src/main.cpp.i
+.PHONY : src/main.i
+
+# target to preprocess a source file
+src/main.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VirtualMachine.dir/build.make CMakeFiles/VirtualMachine.dir/src/main.cpp.i
+.PHONY : src/main.cpp.i
+
+src/main.s: src/main.cpp.s
+.PHONY : src/main.s
+
+# target to generate assembly for a file
+src/main.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VirtualMachine.dir/build.make CMakeFiles/VirtualMachine.dir/src/main.cpp.s
+.PHONY : src/main.cpp.s
+
 src/vm.o: src/vm.cpp.o
 .PHONY : src/vm.o
 
@@ -153,30 +177,6 @@ src/vm.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/VirtualMachine.dir/build.make CMakeFiles/VirtualMachine.dir/src/vm.cpp.s
 .PHONY : src/vm.cpp.s
 
-src/vm_display_test.o: src/vm_display_test.cpp.o
-.PHONY : src/vm_display_test.o
-
-# target to build an object file
-src/vm_display_test.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/VirtualMachine.dir/build.make CMakeFiles/VirtualMachine.dir/src/vm_display_test.cpp.o
-.PHONY : src/vm_display_test.cpp.o
-
-src/vm_display_test.i: src/vm_display_test.cpp.i
-.PHONY : src/vm_display_test.i
-
-# target to preprocess a source file
-src/vm_display_test.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/VirtualMachine.dir/build.make CMakeFiles/VirtualMachine.dir/src/vm_display_test.cpp.i
-.PHONY : src/vm_display_test.cpp.i
-
-src/vm_display_test.s: src/vm_display_test.cpp.s
-.PHONY : src/vm_display_test.s
-
-# target to generate assembly for a file
-src/vm_display_test.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/VirtualMachine.dir/build.make CMakeFiles/VirtualMachine.dir/src/vm_display_test.cpp.s
-.PHONY : src/vm_display_test.cpp.s
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -186,12 +186,12 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... VirtualMachine"
+	@echo "... src/main.o"
+	@echo "... src/main.i"
+	@echo "... src/main.s"
 	@echo "... src/vm.o"
 	@echo "... src/vm.i"
 	@echo "... src/vm.s"
-	@echo "... src/vm_display_test.o"
-	@echo "... src/vm_display_test.i"
-	@echo "... src/vm_display_test.s"
 .PHONY : help
 
 

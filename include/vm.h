@@ -105,7 +105,7 @@ enum ByteCode {
 enum Interrupts {
     PRINT_CHAR = 1,  // Character print interrupt
     PRINT_INT = 2,       // Integer print interrupt
-    PRINT_FLOAT =3 ,     // Float print interrupt
+    // PRINT_FLOAT =3 ,     // Float print interrupt
     VGA_UPDATE = 4    
 };
 
@@ -123,20 +123,20 @@ private:
     size_t font_width;
     VirtualDisplay display;
     uint32_t begin_font_address;
-    vector<pair<ByteCode, uint32_t>> program;
+    vector<pair<ByteCode, uint64_t>> program;
     bool redraw_flag;
 
 
 public:
     VirtualMachine (size_t memorySize);
-    void run(const vector<pair<ByteCode, uint32_t>>& bytecode);
-    void handleInterrupt(uint32_t intNumber);
+    void run(const vector<pair<ByteCode, uint64_t>>& bytecode);
+    void handleInterrupt(uint64_t intNumber);
     void initializeMemory(const unordered_map<uint32_t, uint32_t>& init_values);
     void setFlag(Flags flag);
     void clearFlag(Flags flag);
     bool isFlagSet(Flags flag);
     void checkFlags(int32_t result);
-    void checkFloatFlags(double value);
+    // void checkFloatFlags(double value);
     uint32_t get_int_register(int idx);
     VirtualDisplay& getDisplay(void);
     
@@ -144,11 +144,19 @@ public:
     void printMemoryAtAddress(uint32_t address, bool asAscii);
     void copyMemToVideoMem();
     int copy_font_to_memory(int begin_address);
-    void load(const vector<pair<ByteCode, uint32_t>>& bytecode);
+    void load(const vector<pair<ByteCode, uint64_t>>& bytecode);
     void proceed();
     bool getRedrawFlag();
     void setRedrawFlag(bool flag);
     // vector<uint8_t>& getVideoMemory(void);
+
+    tuple<uint32_t, uint32_t> decodeRegisterAndImmediate(uint64_t operand);
+    tuple<uint32_t, uint32_t> decodeTwoRegisters(uint64_t operand);
+    tuple<uint32_t, uint32_t, uint32_t> decodeThreeRegisters(uint64_t operand);
+
+    uint64_t encodeRegisterAndImmediate(uint32_t reg1, uint32_t immediate);
+    uint64_t encodeTwoRegisters(uint32_t reg1, uint32_t reg2);
+    uint64_t encodeThreeRegisters(uint32_t reg1, uint32_t reg2, uint32_t reg3);
    
 };
 

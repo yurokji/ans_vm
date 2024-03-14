@@ -83,7 +83,7 @@ int VirtualMachine::copy_font_to_memory(int begin_addr){
     return 0;
 }
 
-void VirtualMachine::load(const std::vector<std::pair<ByteCode, std::uint32_t>>& bytecode) {
+void VirtualMachine::load(const std::vector<std::pair<ByteCode, std::uint64_t>>& bytecode) {
     program = bytecode;
 }
 

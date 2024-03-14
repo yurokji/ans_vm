@@ -9,7 +9,7 @@ VirtualMachine::VirtualMachine(size_t memorySize) : display(DISPLAY_WIDTH, DISPL
 
     // Initialize integer and float registers to zero
     std::fill(int_registers, int_registers + 16, 0);
-    std::fill(float_registers, float_registers + 16, 0.0);
+    // std::fill(float_registers, float_registers + 16, 0.0);
     font_width = 32;
     pixel_depth = 8;
     screen_width = font_width*16;
@@ -32,6 +32,7 @@ void VirtualMachine::copyMemToVideoMem() {
     std::uint32_t y_relative_pos = int_registers[3];
     std::uint32_t begin_idx = begin_font_address + ascii_val * (font_width * font_width); 
         std::uint32_t grayscaleValue;
+        // cout <<int_registers[1]<<" "<<int_registers[2]<<" "<<int_registers[3]<<endl;
         size_t idx;
         for (int y = 0; y < font_width; y++) {
             for (int x = 0; x < font_width; x++) {
@@ -73,6 +74,7 @@ int VirtualMachine::copy_font_to_memory(int begin_addr){
                     std::uint8_t grayscaleValue = pixelColor.r;
                     std::uint32_t pixelValue = grayscaleValue;
                     memory.at(begin_addr + idx) = pixelValue;
+                    // cout <<begin_addr + idx <<": "<<pixelValue<<endl;
                     idx++;
                 }
             }
@@ -83,7 +85,7 @@ int VirtualMachine::copy_font_to_memory(int begin_addr){
     return 0;
 }
 
-void VirtualMachine::load(const std::vector<std::pair<ByteCode, std::uint32_t>>& bytecode) {
+void VirtualMachine::load(const std::vector<std::pair<ByteCode, std::uint64_t>>& bytecode) {
     program = bytecode;
 }
 
@@ -129,9 +131,10 @@ void VirtualMachine::proceed() {
                 break;
             }
 
-            case SETH: {
+            case SET: {
                 std::tie(reg1, value) = decodeRegisterAndImmediate(operand);
-                int_registers[reg1] &= value; // Clear upper 32 bits
+                cout <<"reg1: "<<reg1<< ", value: "<<value<<endl;
+                int_registers[reg1] = value; // Clear upper 32 bits
                 break;
             }
 
@@ -479,7 +482,7 @@ void VirtualMachine::setRedrawFlag(bool flag)
 }
 
 
-void VirtualMachine::handleInterrupt(std::uint32_t intNumber) {
+void VirtualMachine::handleInterrupt(std::uint64_t intNumber) {
     switch (intNumber) {
         case PRINT_CHAR:
             std::cout << static_cast<char>(int_registers[0]);
@@ -487,10 +490,11 @@ void VirtualMachine::handleInterrupt(std::uint32_t intNumber) {
         case PRINT_INT:
             std::cout << int_registers[0];
             break;
-        case PRINT_FLOAT:
-            std::cout << float_registers[0];
-            break;
+        // case PRINT_FLOAT:
+        //     std::cout << float_registers[0];
+        //     break;
         case VGA_UPDATE:
+            // std::cout << "VGA_UPDATE: ";
             redraw_flag = true;
             copyMemToVideoMem(); // VGA 업데이트
             break;
@@ -551,20 +555,20 @@ void VirtualMachine::checkFlags(int32_t result)
     }
 }
 
-void VirtualMachine::checkFloatFlags(double value) {
-    if (std::isnan(value)) {
-        // Handle NaN case
-        // Set appropriate flags or take actions
-    } else if (std::isinf(value)) {
-        // Handle Infinity case
-        // Set appropriate flags or take actions
-    } else if (value == 0.0) {
-        flags |= FLOAT_ZERO_FLAG;
-    } else if (value < 0.0) {
-        flags |= FLOAT_NEGATIVE_FLAG;
-    }
-    // You can add more checks depending on your architecture's design
-}
+// void VirtualMachine::checkFloatFlags(double value) {
+//     if (std::isnan(value)) {
+//         // Handle NaN case
+//         // Set appropriate flags or take actions
+//     } else if (std::isinf(value)) {
+//         // Handle Infinity case
+//         // Set appropriate flags or take actions
+//     } else if (value == 0.0) {
+//         flags |= FLOAT_ZERO_FLAG;
+//     } else if (value < 0.0) {
+//         flags |= FLOAT_NEGATIVE_FLAG;
+//     }
+//     // You can add more checks depending on your architecture's design
+// }
 
 
 
@@ -591,4 +595,47 @@ std::uint32_t VirtualMachine::get_int_register(int idx){
 
 VirtualDisplay& VirtualMachine::getDisplay(void){
     return display;
+}
+
+std::tuple<std::uint32_t, std::uint32_t> VirtualMachine::decodeRegisterAndImmediate(std::uint64_t operand) {
+    std::uint32_t reg1 = (operand >> 32) & 0xFFFFFFFF; // Extract the upper 32 bits
+    std::uint32_t immediate = operand & 0xFFFFFFFF;    // Extract the lower 32 bits
+    return std::make_tuple(reg1, immediate);
+}
+
+std::tuple<std::uint32_t, std::uint32_t> VirtualMachine::decodeTwoRegisters(std::uint64_t operand) {
+    std::uint32_t reg1 = (operand >> 32) & 0xFFFFFFFF; // First 32 bits
+    std::uint32_t reg2 = operand & 0xFFFFFFFF;         // Last 32 bits
+    return std::make_tuple(reg1, reg2);
+}
+
+
+std::tuple<std::uint32_t, std::uint32_t, std::uint32_t> VirtualMachine::decodeThreeRegisters(std::uint64_t operand) {
+    std::uint32_t reg1 = (operand >> 42) & 0x3FFFFF; // First 22 bits
+    std::uint32_t reg2 = (operand >> 21) & 0x1FFFFF; // Next 21 bits
+    std::uint32_t reg3 = operand & 0x1FFFFF;         // Last 21 bits
+    return std::make_tuple(reg1, reg2, reg3);
+}
+
+
+std::uint64_t VirtualMachine::encodeRegisterAndImmediate(std::uint32_t reg1, std::uint32_t immediate) {
+    std::uint64_t res = ((long long) reg1 << 32) | immediate;
+    // cout<<"encodeRegisterAndImmediate:  "<<reg1<<" "<<immediate<<" | encoded: "<<res<<endl;
+
+    return res;
+}
+
+std::uint64_t VirtualMachine::encodeTwoRegisters(std::uint32_t first, std::uint32_t second) {
+    // 각 레지스터 인덱스는 32비트에 저장
+    // 32 * 2 = 32비트, 따라서 std::uint32_t 내에 모두 저장 가능
+
+    return ( (uint64_t)((long long) first) << 32) |
+           static_cast<std::uint32_t>(second);
+}
+
+std::uint64_t VirtualMachine::encodeThreeRegisters(std::uint32_t first, std::uint32_t second, std::uint32_t third) {
+    // 각 레지스터 인덱스는 21비트에 저장
+    // 21 * 3 = 63비트, 따라서 std::uint32_t 내에 모두 저장 가능
+
+    return ((long long)first) << 42 | ((long long)second) << 21 | (long long) third ;
 }
