@@ -41,12 +41,12 @@ endif()
 
 execute_process(
   COMMAND "/usr/bin/git"
-          checkout "release-1.14.0" --
+          checkout "v1.14.0" --
   WORKING_DIRECTORY "/home/doldoki/code/ans_vm/build/_deps/googletest-src"
   RESULT_VARIABLE error_code
 )
 if(error_code)
-  message(FATAL_ERROR "Failed to checkout tag: 'release-1.14.0'")
+  message(FATAL_ERROR "Failed to checkout tag: 'v1.14.0'")
 endif()
 
 set(init_submodules TRUE)

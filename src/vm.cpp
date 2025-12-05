@@ -20,7 +20,10 @@ VirtualMachine::VirtualMachine(size_t memorySize) : display(DISPLAY_WIDTH, DISPL
     // 비디오 메모리
     //텍스트 폰트 RAM에 로딩
     begin_font_address = 0x100f;
-    copy_font_to_memory(begin_font_address);
+    const std::size_t font_bytes = font_width * font_width * 16 * 16; // 16x16 glyphs
+    if (memory.size() > begin_font_address && begin_font_address + font_bytes <= memory.size()) {
+        copy_font_to_memory(begin_font_address);
+    }
     
 
 }
@@ -430,6 +433,14 @@ void VirtualMachine::printMemoryAtAddress(std::uint32_t address, bool asAscii = 
 }
 std::uint32_t VirtualMachine::get_int_register(int idx){
     return int_registers[idx];
+}
+
+void VirtualMachine::set_int_register(uint8_t idx, uint32_t value){
+    int_registers[idx] = value;
+}
+
+uint32_t VirtualMachine::get_program_counter() const{
+    return program_counter;
 }
 
 

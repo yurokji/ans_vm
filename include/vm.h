@@ -71,6 +71,8 @@ public:
     void checkFlags(int32_t result);
     // void checkFloatFlags(double value);
     uint32_t get_int_register(int idx);
+    void set_int_register(uint8_t idx, uint32_t value);
+    uint32_t get_program_counter() const;
     VirtualDisplay& getDisplay(void);
     
 
@@ -84,6 +86,5 @@ public:
     // vector<uint8_t>& getVideoMemory(void);
    
 };
-
 
 

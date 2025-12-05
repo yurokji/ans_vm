@@ -20,6 +20,18 @@ set(SOURCES
 
 include(FetchContent)
 
+# Optional: GoogleTest for unit tests.
+find_package(GTest QUIET)
+if(NOT GTest_FOUND)
+  FetchContent_Declare(
+    googletest
+    GIT_REPOSITORY https://github.com/google/googletest.git
+    GIT_TAG v1.14.0
+  )
+  set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+  FetchContent_MakeAvailable(googletest)
+endif()
+
 # SFML: try system first, otherwise fetch from upstream. Audio disabled to reduce deps.
 find_package(SFML 2.5 COMPONENTS graphics window system QUIET)
 if(NOT SFML_FOUND)
@@ -50,3 +62,22 @@ target_link_libraries(
   sfml-system
   pthread
 )
+
+enable_testing()
+
+add_executable(vm_tests
+  src/vm.cpp
+  tests/test_instr.cpp
+  tests/test_vm.cpp
+)
+
+target_link_libraries(
+  vm_tests
+  gtest_main
+  sfml-graphics
+  sfml-window
+  sfml-system
+  pthread
+)
+
+add_test(NAME vm_tests COMMAND vm_tests)

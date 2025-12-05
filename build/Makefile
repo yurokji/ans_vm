@@ -85,6 +85,16 @@ package_source:
 package_source/fast: package_source
 .PHONY : package_source/fast
 
+# Special rule for the target test
+test:
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Running tests..."
+	/usr/bin/ctest --force-new-ctest-process $(ARGS)
+.PHONY : test
+
+# Special rule for the target test
+test/fast: test
+.PHONY : test/fast
+
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "No interactive CMake dialog available..."
@@ -107,7 +117,7 @@ rebuild_cache/fast: rebuild_cache
 
 # Special rule for the target list_install_components
 list_install_components:
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Available install components are: \"Unspecified\" \"bin\" \"devel\""
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Available install components are: \"Unspecified\" \"bin\" \"devel\" \"gmock\" \"gtest\""
 .PHONY : list_install_components
 
 # Special rule for the target list_install_components
@@ -195,6 +205,71 @@ VirtualMachine/fast:
 .PHONY : VirtualMachine/fast
 
 #=============================================================================
+# Target rules for targets named vm_tests
+
+# Build rule for target.
+vm_tests: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 vm_tests
+.PHONY : vm_tests
+
+# fast build rule for target.
+vm_tests/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/vm_tests.dir/build.make CMakeFiles/vm_tests.dir/build
+.PHONY : vm_tests/fast
+
+#=============================================================================
+# Target rules for targets named gmock
+
+# Build rule for target.
+gmock: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 gmock
+.PHONY : gmock
+
+# fast build rule for target.
+gmock/fast:
+	$(MAKE) $(MAKESILENT) -f _deps/googletest-build/googlemock/CMakeFiles/gmock.dir/build.make _deps/googletest-build/googlemock/CMakeFiles/gmock.dir/build
+.PHONY : gmock/fast
+
+#=============================================================================
+# Target rules for targets named gmock_main
+
+# Build rule for target.
+gmock_main: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 gmock_main
+.PHONY : gmock_main
+
+# fast build rule for target.
+gmock_main/fast:
+	$(MAKE) $(MAKESILENT) -f _deps/googletest-build/googlemock/CMakeFiles/gmock_main.dir/build.make _deps/googletest-build/googlemock/CMakeFiles/gmock_main.dir/build
+.PHONY : gmock_main/fast
+
+#=============================================================================
+# Target rules for targets named gtest
+
+# Build rule for target.
+gtest: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 gtest
+.PHONY : gtest
+
+# fast build rule for target.
+gtest/fast:
+	$(MAKE) $(MAKESILENT) -f _deps/googletest-build/googletest/CMakeFiles/gtest.dir/build.make _deps/googletest-build/googletest/CMakeFiles/gtest.dir/build
+.PHONY : gtest/fast
+
+#=============================================================================
+# Target rules for targets named gtest_main
+
+# Build rule for target.
+gtest_main: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 gtest_main
+.PHONY : gtest_main
+
+# fast build rule for target.
+gtest_main/fast:
+	$(MAKE) $(MAKESILENT) -f _deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/build.make _deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/build
+.PHONY : gtest_main/fast
+
+#=============================================================================
 # Target rules for targets named sfml-system
 
 # Build rule for target.
@@ -263,6 +338,7 @@ src/vm.o: src/vm.cpp.o
 # target to build an object file
 src/vm.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/VirtualMachine.dir/build.make CMakeFiles/VirtualMachine.dir/src/vm.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/vm_tests.dir/build.make CMakeFiles/vm_tests.dir/src/vm.cpp.o
 .PHONY : src/vm.cpp.o
 
 src/vm.i: src/vm.cpp.i
@@ -271,6 +347,7 @@ src/vm.i: src/vm.cpp.i
 # target to preprocess a source file
 src/vm.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/VirtualMachine.dir/build.make CMakeFiles/VirtualMachine.dir/src/vm.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/vm_tests.dir/build.make CMakeFiles/vm_tests.dir/src/vm.cpp.i
 .PHONY : src/vm.cpp.i
 
 src/vm.s: src/vm.cpp.s
@@ -279,7 +356,56 @@ src/vm.s: src/vm.cpp.s
 # target to generate assembly for a file
 src/vm.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/VirtualMachine.dir/build.make CMakeFiles/VirtualMachine.dir/src/vm.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/vm_tests.dir/build.make CMakeFiles/vm_tests.dir/src/vm.cpp.s
 .PHONY : src/vm.cpp.s
+
+tests/test_instr.o: tests/test_instr.cpp.o
+.PHONY : tests/test_instr.o
+
+# target to build an object file
+tests/test_instr.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/vm_tests.dir/build.make CMakeFiles/vm_tests.dir/tests/test_instr.cpp.o
+.PHONY : tests/test_instr.cpp.o
+
+tests/test_instr.i: tests/test_instr.cpp.i
+.PHONY : tests/test_instr.i
+
+# target to preprocess a source file
+tests/test_instr.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/vm_tests.dir/build.make CMakeFiles/vm_tests.dir/tests/test_instr.cpp.i
+.PHONY : tests/test_instr.cpp.i
+
+tests/test_instr.s: tests/test_instr.cpp.s
+.PHONY : tests/test_instr.s
+
+# target to generate assembly for a file
+tests/test_instr.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/vm_tests.dir/build.make CMakeFiles/vm_tests.dir/tests/test_instr.cpp.s
+.PHONY : tests/test_instr.cpp.s
+
+tests/test_vm.o: tests/test_vm.cpp.o
+.PHONY : tests/test_vm.o
+
+# target to build an object file
+tests/test_vm.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/vm_tests.dir/build.make CMakeFiles/vm_tests.dir/tests/test_vm.cpp.o
+.PHONY : tests/test_vm.cpp.o
+
+tests/test_vm.i: tests/test_vm.cpp.i
+.PHONY : tests/test_vm.i
+
+# target to preprocess a source file
+tests/test_vm.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/vm_tests.dir/build.make CMakeFiles/vm_tests.dir/tests/test_vm.cpp.i
+.PHONY : tests/test_vm.cpp.i
+
+tests/test_vm.s: tests/test_vm.cpp.s
+.PHONY : tests/test_vm.s
+
+# target to generate assembly for a file
+tests/test_vm.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/vm_tests.dir/build.make CMakeFiles/vm_tests.dir/tests/test_vm.cpp.s
+.PHONY : tests/test_vm.cpp.s
 
 # Help Target
 help:
@@ -295,16 +421,28 @@ help:
 	@echo "... package"
 	@echo "... package_source"
 	@echo "... rebuild_cache"
+	@echo "... test"
 	@echo "... VirtualMachine"
+	@echo "... gmock"
+	@echo "... gmock_main"
+	@echo "... gtest"
+	@echo "... gtest_main"
 	@echo "... sfml-graphics"
 	@echo "... sfml-system"
 	@echo "... sfml-window"
+	@echo "... vm_tests"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
 	@echo "... src/vm.o"
 	@echo "... src/vm.i"
 	@echo "... src/vm.s"
+	@echo "... tests/test_instr.o"
+	@echo "... tests/test_instr.i"
+	@echo "... tests/test_instr.s"
+	@echo "... tests/test_vm.o"
+	@echo "... tests/test_vm.i"
+	@echo "... tests/test_vm.s"
 .PHONY : help
 
 

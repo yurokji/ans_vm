@@ -1,0 +1,50 @@
+Start testing: Dec 05 14:10 KST
+----------------------------------------------------------
+1/1 Testing: vm_tests
+1/1 Test: vm_tests
+Command: "/home/doldoki/code/ans_vm/build/vm_tests"
+Directory: /home/doldoki/code/ans_vm/build
+"vm_tests" start time: Dec 05 14:10 KST
+Output:
+----------------------------------------------------------
+Running main() from /home/doldoki/code/ans_vm/build/_deps/googletest-src/googletest/src/gtest_main.cc
+[==========] Running 10 tests from 2 test suites.
+[----------] Global test environment set-up.
+[----------] 3 tests from InstrTest
+[ RUN      ] InstrTest.MakeRRR
+[       OK ] InstrTest.MakeRRR (0 ms)
+[ RUN      ] InstrTest.MakeRI
+[       OK ] InstrTest.MakeRI (0 ms)
+[ RUN      ] InstrTest.MakeRAndJ
+[       OK ] InstrTest.MakeRAndJ (0 ms)
+[----------] 3 tests from InstrTest (0 ms total)
+
+[----------] 7 tests from VMFixture
+[ RUN      ] VMFixture.AddOperation
+[       OK ] VMFixture.AddOperation (1 ms)
+[ RUN      ] VMFixture.CmpFlagsZero
+[       OK ] VMFixture.CmpFlagsZero (1 ms)
+[ RUN      ] VMFixture.LoadAndStore
+[       OK ] VMFixture.LoadAndStore (0 ms)
+[ RUN      ] VMFixture.JumpImmediate
+[       OK ] VMFixture.JumpImmediate (0 ms)
+[ RUN      ] VMFixture.JumpRegister
+[       OK ] VMFixture.JumpRegister (0 ms)
+[ RUN      ] VMFixture.CallAndRetImmediate
+[       OK ] VMFixture.CallAndRetImmediate (0 ms)
+[ RUN      ] VMFixture.CallAndRetRegister
+[       OK ] VMFixture.CallAndRetRegister (0 ms)
+[----------] 7 tests from VMFixture (5 ms total)
+
+[----------] Global test environment tear-down
+[==========] 10 tests from 2 test suites ran. (5 ms total)
+[  PASSED  ] 10 tests.
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"vm_tests" end time: Dec 05 14:10 KST
+"vm_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Dec 05 14:10 KST
