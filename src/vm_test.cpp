@@ -7,7 +7,7 @@ int main() {
     VirtualMachine vm(1024);
 
     // Define initial memory values using an unordered_map
-    std::unordered_map<std::uint64_t, std::uint64_t> init_memory = {
+    std::unordered_map<std::uint32_t, std::uint32_t> init_memory = {
         {0, 104},                      // ASCII code for 'h'
         {1, 101},                      // ASCII code for 'e'
         {2, 108},                      // ASCII code for 'l'
@@ -26,39 +26,21 @@ int main() {
     // Initialize memory using the init_memory map
     vm.initializeMemory(init_memory);
 
-    // Define the bytecode for the program to print the characters
-    std::vector<std::pair<ByteCode, std::uint64_t>> bytecode = {
-        {SETH, vm.encodeRegisterAndImmediate(0, 0)},
-        {SETL, vm.encodeRegisterAndImmediate(0, 0)},
-        {LOAD, 0},        // Load the interrupt value from memory
-        {SETL, vm.encodeRegisterAndImmediate(2, 0)},
-        {SETL, vm.encodeRegisterAndImmediate(3, 1)},
-        
-        
-        {LOAD, vm.encodeTwoRegisters(0, 2)},
-        {INT, PRINT_CHAR},
-        {ADD, vm.encodeThreeRegisters(2, 2, 3)},
+    // Define the program to print the characters
+    std::vector<Instr> bytecode = {
+        makeRI(Op::SET, 0, 0),      // addr = 0
+        makeRI(Op::SET, 2, 1),      // step = 1
+        makeRI(Op::SET, 5, 0),      // counter = 0
+        makeRI(Op::SET, 6, 13),     // length = 13 characters
 
-        {LOAD, vm.encodeTwoRegisters(0, 2)},
-        {INT, PRINT_CHAR},
-        {ADD, vm.encodeThreeRegisters(2, 2, 3)},
-
-        {LOAD, vm.encodeTwoRegisters(0, 2)},
-        {INT, PRINT_CHAR},
-        {ADD, vm.encodeThreeRegisters(2, 2, 3)},
-
-        {LOAD, vm.encodeTwoRegisters(0, 2)},
-        {INT, PRINT_CHAR},
-        {ADD, vm.encodeThreeRegisters(2, 2, 3)},
-
-        {LOAD, vm.encodeTwoRegisters(0, 2)},
-        {INT, PRINT_CHAR},
-        {ADD, vm.encodeThreeRegisters(2, 2, 3)},
-
-        {SETL, vm.encodeRegisterAndImmediate(4, 100)},
-        {STOREI, vm.encodeRegisterAndImmediate(4, 0xa202f)},
-        {LOADI, vm.encodeRegisterAndImmediate(5, 100)}
- };
+        {Op::LOAD, 0, 0, 0, 0},     // r0 = mem[addr]
+        makeINT(PRINT_CHAR),        // print r0
+        {Op::ADD, 0, 0, 2, 0},      // addr += step
+        {Op::ADD, 5, 5, 2, 0},      // counter += step
+        {Op::CMP, 5, 6, 0, 0},      // compare counter vs length (flags only)
+        {Op::JNZ, 0, 0, 0, 4},      // if not done, jump back to LOAD
+        {Op::HALT, 0, 0, 0, 0}
+    };
         
         
         

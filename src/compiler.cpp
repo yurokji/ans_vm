@@ -19,37 +19,24 @@ void loadStringToMemory(VirtualMachine& vm, const std::string& str, std::uint64_
     }
 }
 
-// 가상 머신을 위한 바이트코드 생성
-std::vector<std::pair<ByteCode, std::uint64_t>> generateByteCode(const std::string& str, std::uint64_t startAddr) {
-    std::vector<std::pair<ByteCode, std::uint64_t>> bytecode;
-    for (std::size_t i = 0; i < str.size(); ++i) {
-        bytecode.push_back({LOAD, startAddr + i});
-        bytecode.push_back({INT, PRINT_CHAR});
-    }
-    bytecode.push_back({HALT, 0});
-    return bytecode;
-}
+// 가상 머신을 위한 인스트럭션 생성
+std::vector<Instr> generateInstr(const std::string& str, std::uint32_t startAddr) {
+    std::vector<Instr> program;
+    program.push_back(makeRI(Op::SET, 6, startAddr));              // r6 = address pointer
+    program.push_back(makeRI(Op::SET, 1, 0));                      // counter
+    program.push_back(makeRI(Op::SET, 2, 1));                      // step
+    program.push_back(makeRI(Op::SET, 3, static_cast<uint32_t>(str.size()))); // length
 
-
-void outputAssembly(const std::vector<std::pair<ByteCode, std::uint64_t>>& bytecode) {
-    for (const auto& instruction : bytecode) {
-        switch (instruction.first) {
-            case LOAD:
-                std::cout << "LOAD " << instruction.second << std::endl;
-                break;
-            case ADD:
-                std::cout << "ADD " << instruction.second << std::endl;
-                break;
-            case INT:
-                std::cout << "INT " << instruction.second << std::endl;
-                break;
-            case HALT:
-                std::cout << "HALT" << std::endl;
-                break;
-            default:
-                std::cout << "UNKNOWN" << std::endl;
-        }
-    }
+    std::size_t loop_idx = program.size();
+    program.push_back({Op::LOAD, 4, 6, 0, 0});                    // r4 = mem[r6]
+    program.push_back({Op::OR, 0, 4, 4, 0});                      // r0 = r4 (for printing)
+    program.push_back(makeINT(PRINT_CHAR));                       // print r0
+    program.push_back({Op::ADD, 6, 6, 2, 0});                     // r6 += 1
+    program.push_back({Op::ADD, 1, 1, 2, 0});                     // counter += 1
+    program.push_back({Op::CMP, 1, 3, 0, 0});                     // counter - length (flags only)
+    program.push_back({Op::JNZ, 0, 0, 0, static_cast<uint32_t>(loop_idx)}); // loop if not done
+    program.push_back({Op::HALT, 0, 0, 0, 0});
+    return program;
 }
 
 int main() {
@@ -62,31 +49,11 @@ int main() {
     // 문자열을 가상 머신의 메모리에 로드
     loadStringToMemory(vm, str, 10);  // 시작 주소는 10으로 가정
 
-    // 바이트코드 생성
-    auto bytecode = generateByteCode(str, 10);
-
-    // // 어셈블리코드 출력
-    // outputAssembly(bytecode);
-
-
-// Load instructions directly (each instruction is some enum or integer)
-    std::vector<uint64_t> program = {
-        LOAD, 0, 0,       // Load 0 into register 0 (Initialize position to 0)
-        LABEL_LOOP,
-        LOAD, 1, 0,       // Load current position from register 0 to register 1
-        ADD, 1, 0x20,     // Add 0x20 to register 1
-        STORE, 1, 2,      // Store this "screen position" into memory at index 2
-        // ... (more instructions to print and sleep)
-        JMP, LABEL_LOOP   // Jump back to start of loop
-    };
-
-    vm.loadProgram(program);  // Load this program into the VM's memory
-    vm.run();  // Run the VM
-    
-
+    // 인스트럭션 생성
+    auto program = generateInstr(str, 10);
 
     // 가상 머신 실행
-    vm.run(bytecode);
+    vm.run(program);
     
 
     return 0;

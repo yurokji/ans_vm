@@ -26,18 +26,18 @@ int main() {
 
 
     // Example 64-bit variable
-    std::vector<std::pair<ByteCode, std::uint64_t>> bytecode;
+    std::vector<Instr> bytecode;
     
 
     
-    bytecode.push_back({SET, vm.encodeRegisterAndImmediate(0, 0)});
-    bytecode.push_back({LOAD, 0});        // Load the interrupt value from memory
-    bytecode.push_back({SET, vm.encodeRegisterAndImmediate(2, 0)});
-    bytecode.push_back({SET, vm.encodeRegisterAndImmediate(3, 1)});
-    bytecode.push_back({LOAD, vm.encodeTwoRegisters(0, 2)});
-    bytecode.push_back({INT, PRINT_CHAR});
-    bytecode.push_back({ADD, vm.encodeThreeRegisters(2, 2, 3)});
-    bytecode.push_back({LOAD, vm.encodeTwoRegisters(0, 2)});
+    bytecode.push_back(makeRI(Op::SET, 0, 0));
+    bytecode.push_back({Op::LOAD, 0, 0, 0, 0});        // r0 <- mem[r0]
+    bytecode.push_back(makeRI(Op::SET, 2, 0));
+    bytecode.push_back(makeRI(Op::SET, 3, 1));
+    bytecode.push_back({Op::LOAD, 0, 2, 0, 0});        // r0 <- mem[r2]
+    bytecode.push_back(makeINT(PRINT_CHAR));
+    bytecode.push_back({Op::ADD, 2, 2, 3, 0});         // r2 += r3
+    bytecode.push_back({Op::LOAD, 0, 2, 0, 0});
 
     int ascii_val;
     for (int k=0; k < 100; k++) {
@@ -51,15 +51,15 @@ int main() {
                 else{
                     ascii_val = 255 - i * 16 + j;
                 }
-                bytecode.push_back({SET, vm.encodeRegisterAndImmediate(1, ascii_val)});
-                bytecode.push_back({SET, vm.encodeRegisterAndImmediate(2, j)});
-                bytecode.push_back({SET, vm.encodeRegisterAndImmediate(3, i)});
-                bytecode.push_back({INT, VGA_UPDATE});
+                bytecode.push_back(makeRI(Op::SET, 1, ascii_val));
+                bytecode.push_back(makeRI(Op::SET, 2, j));
+                bytecode.push_back(makeRI(Op::SET, 3, i));
+                bytecode.push_back(makeINT(VGA_UPDATE));
                 
             }
 
         }
-        bytecode.push_back({NOP, 0});
+        bytecode.push_back({Op::NOP, 0, 0, 0, 0});
     }
 
 

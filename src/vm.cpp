@@ -85,389 +85,229 @@ int VirtualMachine::copy_font_to_memory(int begin_addr){
     return 0;
 }
 
-void VirtualMachine::load(const std::vector<std::pair<ByteCode, std::uint64_t>>& bytecode) {
+void VirtualMachine::load(const std::vector<Instr>& bytecode) {
     program = bytecode;
+    program_counter = 0;
+}
+
+void VirtualMachine::run(const std::vector<Instr>& bytecode) {
+    load(bytecode);
+    while (program_counter < program.size()) {
+        proceed();
+    }
 }
 
 void VirtualMachine::proceed() {
-    std::uint32_t reg1, reg2, reg3, value;
-    if (program_counter < program.size()) {
-        auto [opcode, operand] = program[program_counter++];
-        switch (opcode) {
-            case NOP:
-                std::this_thread::sleep_for(std::chrono::milliseconds(100));
-                break;
+    if (program_counter >= program.size()) {
+        return;
+    }
 
-            case INT:
-                handleInterrupt(operand);
-                break;
+    const Instr& ins = program[program_counter++];
 
-            case HALT:
-                return;
+    switch (ins.op) {
+        case Op::NOP:
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            break;
 
-            case LOAD: {
-                std::tie(reg1, reg2) = decodeTwoRegisters(operand);
-                int_registers[reg1] = memory[int_registers[reg2]];
-                break;
-            }
+        case Op::INT:
+            handleInterrupt(ins.imm);
+            break;
 
-                
-            case LOADI: {
-                std::tie(reg1, value) = decodeRegisterAndImmediate(operand);
-                int_registers[reg1] = memory[value];
-                // std::cout<<std::hex<<int_registers[reg1]<<std::endl;
-                break;
-            }
+        case Op::HALT:
+            program_counter = program.size();
+            return;
 
-
-            case STORE:
-                memory[int_registers[++program_counter]] = int_registers[operand];
-                break;
-
-            case STOREI: {
-                std::tie(reg1, value) = decodeRegisterAndImmediate(operand);
-                // std::cout<<reg1 <<" "<<int_registers[reg1]<<" "<<value <<std::endl;
-                memory[int_registers[reg1]] = value;
-                break;
-            }
-
-            case SET: {
-                std::tie(reg1, value) = decodeRegisterAndImmediate(operand);
-                cout <<"reg1: "<<reg1<< ", value: "<<value<<endl;
-                int_registers[reg1] = value; // Clear upper 32 bits
-                break;
-            }
-
-            case CLEAR:
-                // Clear the contents of the given register
-                int_registers[operand] = 0;
-                break;
-
-            case ADD: {
-                std::tie(reg1, reg2, reg3) = decodeThreeRegisters(operand);
-                int32_t result = static_cast<int32_t>(int_registers[reg2]) + static_cast<int32_t>(int_registers[reg3]);
-                checkFlags(result);
-                // std::cout << reg1 <<reg2 <<reg3 << int_registers[reg1] <<int_registers[reg2] << result <<std::endl;
-                int_registers[reg1] = static_cast<std::uint32_t>(result);
-                break;
-            }
-
-            case SUB: {
-                std::tie(reg1, reg2, reg3) = decodeThreeRegisters(operand);
-                int32_t result = static_cast<int32_t>(int_registers[reg2]) - static_cast<int32_t>(int_registers[reg3]);
-                checkFlags(result);
-                int_registers[reg1] = static_cast<std::uint32_t>(result);
-                break;
-            }
-            
-            case MUL: {
-                std::tie(reg1, reg2, reg3) = decodeThreeRegisters(operand);
-                int32_t result = static_cast<int32_t>(int_registers[reg2]) * static_cast<int32_t>(int_registers[reg3]);
-
-                // Check for overflow·
-                if (result > std::numeric_limits<std::uint32_t>::max() || result < std::numeric_limits<std::int32_t>::min()) {
-                    // Handle overflow error
-                    // You can choose to set flags, throw an exception, or take other actions
-                    // depending on your architecture design
-                    flags |= OVERFLOW_FLAG;
-                } else {
-                    int_registers[reg1] = static_cast<std::uint32_t>(result);
-                    checkFlags(int_registers[reg1]);
-                }
-                break;
-            }
-
-            case DIV: {
-                std::tie(reg1, reg2, reg3) = decodeThreeRegisters(operand);
-                int32_t divisor = static_cast<int32_t>(int_registers[reg3]);
-
-                if (divisor != 0) {
-                    int32_t result = static_cast<int32_t>(int_registers[reg2]) / divisor;
-                    int_registers[reg1] = static_cast<std::uint32_t>(result);
-                    checkFlags(result);
-                } else {
-                    // Handle division by zero error
-                    // For example, set the division by zero flag
-                    flags |= DIVISION_BY_ZERO_FLAG;
-                }
-                break;
-            }
-
-            case MOD: {
-                std::tie(reg1, reg2, reg3) = decodeThreeRegisters(operand);
-                int32_t divisor = static_cast<int32_t>(int_registers[reg3]);
-
-                if (divisor != 0) {
-                    int32_t result = static_cast<int32_t>(int_registers[reg2]) % divisor;
-                    int_registers[reg1] = static_cast<std::uint32_t>(result);
-                    checkFlags(int_registers[reg1]);
-                } else {
-                    // Handle division by zero error
-                    // You can choose to set flags, throw an exception, or take other actions
-                    // depending on your architecture design
-                    flags |= DIVISION_BY_ZERO_FLAG;
-                }
-                break;
-            }
-
-
-            case CMP: {
-                std::tie(reg1, reg2) = decodeTwoRegisters(operand);
-                int32_t result = static_cast<int32_t>(int_registers[reg1]) - static_cast<int32_t>(int_registers[reg2]);
-                checkFlags(result);
-                break;
-            }
-            
-
-
-            case AND: {
-                std::tie(reg1, reg2, reg3) = decodeThreeRegisters(operand);
-                int_registers[reg1] = int_registers[reg2] & int_registers[reg3];
-                checkFlags(int_registers[reg1]);
-                break;
-            }
-
-            case OR: {
-                std::tie(reg1, reg2, reg3) = decodeThreeRegisters(operand);
-                int_registers[reg1] = int_registers[reg2] | int_registers[reg3];
-                checkFlags(int_registers[reg1]);
-                break;
-            }
-
-            case XOR: {
-                std::tie(reg1, reg2, reg3) = decodeThreeRegisters(operand);
-                int_registers[reg1] = int_registers[reg2] ^ int_registers[reg3];
-                checkFlags(int_registers[reg1]);
-                break;
-            }
-
-            case NOT: {
-                std::tie(reg1, reg2, reg3) = decodeThreeRegisters(operand);
-                int_registers[reg1] = ~int_registers[reg2];
-                checkFlags(int_registers[reg1]);
-                break;
-            }
-
-            case SHL: {
-                std::tie(reg1, reg2, reg3) = decodeThreeRegisters(operand);
-                int_registers[reg1] = int_registers[reg2] << int_registers[reg3];
-                checkFlags(int_registers[reg1]);
-                break;
-            }
-
-            case SHR: {
-                std::tie(reg1, reg2, reg3) = decodeThreeRegisters(operand);
-                int_registers[reg1] = int_registers[reg2] >> int_registers[reg3];
-                checkFlags(int_registers[reg1]);
-                break;
-            }
-
-
-
-            case JMP: {
-                program_counter = operand;
-                break;
-            }
-
-
-            case JZ: {
-                if (flags & ZERO_FLAG) {
-                    program_counter = operand;
-                }
-                break;
-            }
-
-            case JNZ: {
-                if (!(flags & ZERO_FLAG)) {
-                    program_counter = operand;
-                }
-                break;
-            }
-
-            case JC: {
-                if (flags & CARRY_FLAG) {
-                    program_counter = operand;
-                }
-                break;
-            }
-
-            case JNC: {
-                if (!(flags & CARRY_FLAG)) {
-                    program_counter = operand;
-                }
-                break;
-            }
-
-            case JS: {
-                if (flags & NEGATIVE_FLAG) {
-                    program_counter = operand;
-                }
-                break;
-            }
-
-            case JNS: {
-                if (!(flags & NEGATIVE_FLAG)) {
-                    program_counter = operand;
-                }
-                break;
-            }
-
-            case JO: {
-                if (flags & OVERFLOW_FLAG) {
-                    program_counter = operand;
-                }
-                break;
-            }
-
-            case JNO: {
-                if (!(flags & OVERFLOW_FLAG)) {
-                    program_counter = operand;
-                }
-                break;
-            }
-
-
-            case PUSH: {
-                reg1 = operand;
-                // Push the value in the specified register onto the stack
-                // Decrement the stack_pointer, and then store the value from the register into memory at the stack_pointer address
-                memory[stack_pointer--] = int_registers[reg1];
-                break;
-            }
-
-            case POP: {
-                reg1 = operand;
-                // Pop a value from the stack into the specified register
-                // Increment the stack_pointer, and then load the value from memory at the stack_pointer+1 address into the register
-                int_registers[reg1] = memory[++stack_pointer];
-                break;
-            }
-
-            case CALL: {
-                reg1 = operand;
-                // Save the return address (program_counter + 1) onto the stack
-                memory[stack_pointer--] = program_counter + 1;
-
-                // Set program_counter to the address in the specified register
-                program_counter = int_registers[reg1];
-                break;
-            }
-
-            case RET: {
-                // Pop the return address from the stack and assign it to program_counter
-                program_counter = memory[++stack_pointer];
-                break;
-            }
-
-
-            // case FADD: {
-            //     std::tie(reg1, reg2, reg3) = decodeThreeRegisters(operand);
-            //     float result = float_registers[reg2] + float_registers[reg3];
-            //     float_registers[reg1] = result;
-            //     checkFloatFlags(result);
-            //     break;
-            // }
-
-            // case FSUB: {
-            //     std::tie(reg1, reg2, reg3) = decodeThreeRegisters(operand);
-            //     float result = float_registers[reg2] - float_registers[reg3];
-            //     float_registers[reg1] = result;
-            //     checkFloatFlags(result);
-            //     break;
-            // }
-
-            // case FMUL: {
-            //     std::tie(reg1, reg2, reg3) = decodeThreeRegisters(operand);
-            //     float result = float_registers[reg2] * float_registers[reg3];
-            //     float_registers[reg1] = result;
-            //     checkFloatFlags(result);
-            //     break;
-            // }
-
-            // case FDIV: {
-            //     std::tie(reg1, reg2, reg3) = decodeThreeRegisters(operand);
-            //     float result = float_registers[reg2] / float_registers[reg3];
-            //     float_registers[reg1] = result;
-            //     checkFloatFlags(result);
-            //     break;
-            // }
-
-            // case FCMP: {
-            //     std::tie(reg1, reg2) = decodeTwoRegisters(operand);
-            //     float result = float_registers[reg1] - float_registers[reg2];
-            //     checkFloatFlags(result);
-            //     break;
-            // }
-
-
-            // case FJZ: {
-            //     if (flags & FLOAT_ZERO_FLAG) {
-            //         // Jump
-            //         program_counter = static_cast<std::size_t>(operand);
-            //     }
-            //     break;
-            // }
-
-            // case FJNZ: {
-            //     if (!(flags & FLOAT_ZERO_FLAG)) {
-            //         // Jump
-            //         program_counter = static_cast<std::size_t>(operand);
-            //     }
-            //     break;
-            // }
-
-            // case FJC: {
-            //     if (flags & FLOAT_CARRY_FLAG) {
-            //         // Jump
-            //         program_counter = static_cast<std::size_t>(operand);
-            //     }
-            //     break;
-            // }
-
-            // case FJNC: {
-            //     if (!(flags & FLOAT_CARRY_FLAG)) {
-            //         // Jump
-            //         program_counter = static_cast<std::size_t>(operand);
-            //     }
-            //     break;
-            // }
-
-            // case FJS: {
-            //     if (flags & FLOAT_NEGATIVE_FLAG) {
-            //         // Jump
-            //         program_counter = static_cast<std::size_t>(operand);
-            //     }
-            //     break;
-            // }
-
-            // case FJNS: {
-            //     if (!(flags & FLOAT_NEGATIVE_FLAG)) {
-            //         // Jump
-            //         program_counter = static_cast<std::size_t>(operand);
-            //     }
-            //     break;
-            // }
-
-            // case FJO: {
-            //     if (flags & FLOAT_OVERFLOW_FLAG) {
-            //         // Jump
-            //         program_counter = static_cast<std::size_t>(operand);
-            //     }
-            //     break;
-            // }
-
-            // case FJNO: {
-            //     if (!(flags & FLOAT_OVERFLOW_FLAG)) {
-            //         // Jump
-            //         program_counter = static_cast<std::size_t>(operand);
-            //     }
-            //     break;
-            // }
-
-            default:
-                std::cerr << "Unknown opcode: " << opcode << std::endl;
-                return;
+        case Op::LOAD: {
+            uint32_t addr = int_registers[ins.r2] + ins.imm;
+            int_registers[ins.r1] = memory.at(addr);
+            break;
         }
+
+        case Op::LOADI:
+            int_registers[ins.r1] = memory.at(ins.imm);
+            break;
+
+        case Op::STORE: {
+            uint32_t addr = int_registers[ins.r2] + ins.imm;
+            memory.at(addr) = int_registers[ins.r3];
+            break;
+        }
+
+        case Op::STOREI:
+            memory.at(ins.imm) = int_registers[ins.r3];
+            break;
+
+        case Op::SET:
+            int_registers[ins.r1] = ins.imm;
+            break;
+
+        case Op::ADD: {
+            int32_t result = static_cast<int32_t>(int_registers[ins.r2]) + static_cast<int32_t>(int_registers[ins.r3]);
+            checkFlags(result);
+            int_registers[ins.r1] = static_cast<std::uint32_t>(result);
+            break;
+        }
+
+        case Op::SUB: {
+            int32_t result = static_cast<int32_t>(int_registers[ins.r2]) - static_cast<int32_t>(int_registers[ins.r3]);
+            checkFlags(result);
+            int_registers[ins.r1] = static_cast<std::uint32_t>(result);
+            break;
+        }
+
+        case Op::MUL: {
+            int64_t wide = static_cast<int64_t>(static_cast<int32_t>(int_registers[ins.r2])) *
+                           static_cast<int64_t>(static_cast<int32_t>(int_registers[ins.r3]));
+            if (wide > std::numeric_limits<std::int32_t>::max() || wide < std::numeric_limits<std::int32_t>::min()) {
+                flags |= OVERFLOW_FLAG;
+            } else {
+                int_registers[ins.r1] = static_cast<std::uint32_t>(wide);
+                checkFlags(static_cast<int32_t>(wide));
+            }
+            break;
+        }
+
+        case Op::DIV: {
+            int32_t divisor = static_cast<int32_t>(int_registers[ins.r3]);
+            if (divisor != 0) {
+                int32_t result = static_cast<int32_t>(int_registers[ins.r2]) / divisor;
+                int_registers[ins.r1] = static_cast<std::uint32_t>(result);
+                checkFlags(result);
+            } else {
+                flags |= DIVISION_BY_ZERO_FLAG;
+            }
+            break;
+        }
+
+        case Op::MOD: {
+            int32_t divisor = static_cast<int32_t>(int_registers[ins.r3]);
+            if (divisor != 0) {
+                int32_t result = static_cast<int32_t>(int_registers[ins.r2]) % divisor;
+                int_registers[ins.r1] = static_cast<std::uint32_t>(result);
+                checkFlags(result);
+            } else {
+                flags |= DIVISION_BY_ZERO_FLAG;
+            }
+            break;
+        }
+
+        case Op::CMP: {
+            int32_t result = static_cast<int32_t>(int_registers[ins.r1]) - static_cast<int32_t>(int_registers[ins.r2]);
+            checkFlags(result);
+            break;
+        }
+
+        case Op::AND:
+            int_registers[ins.r1] = int_registers[ins.r2] & int_registers[ins.r3];
+            checkFlags(static_cast<int32_t>(int_registers[ins.r1]));
+            break;
+
+        case Op::OR:
+            int_registers[ins.r1] = int_registers[ins.r2] | int_registers[ins.r3];
+            checkFlags(static_cast<int32_t>(int_registers[ins.r1]));
+            break;
+
+        case Op::XOR:
+            int_registers[ins.r1] = int_registers[ins.r2] ^ int_registers[ins.r3];
+            checkFlags(static_cast<int32_t>(int_registers[ins.r1]));
+            break;
+
+        case Op::NOT_OP:
+            int_registers[ins.r1] = ~int_registers[ins.r2];
+            checkFlags(static_cast<int32_t>(int_registers[ins.r1]));
+            break;
+
+        case Op::SHL:
+            int_registers[ins.r1] = int_registers[ins.r2] << int_registers[ins.r3];
+            checkFlags(static_cast<int32_t>(int_registers[ins.r1]));
+            break;
+
+        case Op::SHR:
+            int_registers[ins.r1] = int_registers[ins.r2] >> int_registers[ins.r3];
+            checkFlags(static_cast<int32_t>(int_registers[ins.r1]));
+            break;
+
+        case Op::JMP:
+            program_counter = ins.imm;
+            break;
+
+        case Op::JMPR:
+            program_counter = int_registers[ins.r1];
+            break;
+
+        case Op::JZ:
+            if (flags & ZERO_FLAG) {
+                program_counter = ins.imm;
+            }
+            break;
+
+        case Op::JNZ:
+            if (!(flags & ZERO_FLAG)) {
+                program_counter = ins.imm;
+            }
+            break;
+
+        case Op::JC:
+            if (flags & CARRY_FLAG) {
+                program_counter = ins.imm;
+            }
+            break;
+
+        case Op::JNC:
+            if (!(flags & CARRY_FLAG)) {
+                program_counter = ins.imm;
+            }
+            break;
+
+        case Op::JS:
+            if (flags & NEGATIVE_FLAG) {
+                program_counter = ins.imm;
+            }
+            break;
+
+        case Op::JNS:
+            if (!(flags & NEGATIVE_FLAG)) {
+                program_counter = ins.imm;
+            }
+            break;
+
+        case Op::JO:
+            if (flags & OVERFLOW_FLAG) {
+                program_counter = ins.imm;
+            }
+            break;
+
+        case Op::JNO:
+            if (!(flags & OVERFLOW_FLAG)) {
+                program_counter = ins.imm;
+            }
+            break;
+
+        case Op::PUSH:
+            memory[stack_pointer--] = int_registers[ins.r1];
+            break;
+
+        case Op::POP:
+            int_registers[ins.r1] = memory[++stack_pointer];
+            break;
+
+        case Op::CALL:
+            memory[stack_pointer--] = program_counter;
+            program_counter = ins.imm;
+            break;
+
+        case Op::CALLR:
+            memory[stack_pointer--] = program_counter;
+            program_counter = int_registers[ins.r1];
+            break;
+
+        case Op::RET:
+            program_counter = memory[++stack_pointer];
+            break;
+
+        default:
+            std::cerr << "Unknown opcode" << std::endl;
+            return;
     }
 }
 
@@ -595,47 +435,4 @@ std::uint32_t VirtualMachine::get_int_register(int idx){
 
 VirtualDisplay& VirtualMachine::getDisplay(void){
     return display;
-}
-
-std::tuple<std::uint32_t, std::uint32_t> VirtualMachine::decodeRegisterAndImmediate(std::uint64_t operand) {
-    std::uint32_t reg1 = (operand >> 32) & 0xFFFFFFFF; // Extract the upper 32 bits
-    std::uint32_t immediate = operand & 0xFFFFFFFF;    // Extract the lower 32 bits
-    return std::make_tuple(reg1, immediate);
-}
-
-std::tuple<std::uint32_t, std::uint32_t> VirtualMachine::decodeTwoRegisters(std::uint64_t operand) {
-    std::uint32_t reg1 = (operand >> 32) & 0xFFFFFFFF; // First 32 bits
-    std::uint32_t reg2 = operand & 0xFFFFFFFF;         // Last 32 bits
-    return std::make_tuple(reg1, reg2);
-}
-
-
-std::tuple<std::uint32_t, std::uint32_t, std::uint32_t> VirtualMachine::decodeThreeRegisters(std::uint64_t operand) {
-    std::uint32_t reg1 = (operand >> 42) & 0x3FFFFF; // First 22 bits
-    std::uint32_t reg2 = (operand >> 21) & 0x1FFFFF; // Next 21 bits
-    std::uint32_t reg3 = operand & 0x1FFFFF;         // Last 21 bits
-    return std::make_tuple(reg1, reg2, reg3);
-}
-
-
-std::uint64_t VirtualMachine::encodeRegisterAndImmediate(std::uint32_t reg1, std::uint32_t immediate) {
-    std::uint64_t res = ((long long) reg1 << 32) | immediate;
-    // cout<<"encodeRegisterAndImmediate:  "<<reg1<<" "<<immediate<<" | encoded: "<<res<<endl;
-
-    return res;
-}
-
-std::uint64_t VirtualMachine::encodeTwoRegisters(std::uint32_t first, std::uint32_t second) {
-    // 각 레지스터 인덱스는 32비트에 저장
-    // 32 * 2 = 32비트, 따라서 std::uint32_t 내에 모두 저장 가능
-
-    return ( (uint64_t)((long long) first) << 32) |
-           static_cast<std::uint32_t>(second);
-}
-
-std::uint64_t VirtualMachine::encodeThreeRegisters(std::uint32_t first, std::uint32_t second, std::uint32_t third) {
-    // 각 레지스터 인덱스는 21비트에 저장
-    // 21 * 3 = 63비트, 따라서 std::uint32_t 내에 모두 저장 가능
-
-    return ((long long)first) << 42 | ((long long)second) << 21 | (long long) third ;
 }

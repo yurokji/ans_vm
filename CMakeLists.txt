@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.14)
 
 project(VirtualMachine)
 
@@ -11,10 +11,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # 컴파일러에게 헤더 파일의 위치를 알려줍니다.
 include_directories(${CMAKE_SOURCE_DIR}/include)
-include_directories(${GTEST_INCLUDE_DIRS})
-
-
-find_package(GTest REQUIRED)
 
 # 소스 파일을 변수에 추가합니다.
 set(SOURCES
@@ -22,11 +18,35 @@ set(SOURCES
     src/main.cpp
 )
 
-# SFML을 찾도록 CMake에 지시합니다.
-find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
+include(FetchContent)
+
+# SFML: try system first, otherwise fetch from upstream. Audio disabled to reduce deps.
+find_package(SFML 2.5 COMPONENTS graphics window system QUIET)
+if(NOT SFML_FOUND)
+  message(STATUS "SFML not found on system; fetching SFML 2.6.1 via FetchContent")
+  FetchContent_Declare(
+    SFML
+    GIT_REPOSITORY https://github.com/SFML/SFML.git
+    GIT_TAG 2.6.1
+  )
+  set(SFML_BUILD_AUDIO OFF CACHE BOOL "" FORCE)
+  set(SFML_BUILD_GRAPHICS ON CACHE BOOL "" FORCE)
+  set(SFML_BUILD_WINDOW ON CACHE BOOL "" FORCE)
+  set(SFML_BUILD_NETWORK OFF CACHE BOOL "" FORCE)
+  set(SFML_BUILD_DOC OFF CACHE BOOL "" FORCE)
+  set(SFML_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+  set(SFML_INSTALL_PKGCONFIG_FILES OFF CACHE BOOL "" FORCE)
+  FetchContent_MakeAvailable(SFML)
+endif()
 
 # 실행 파일을 만듭니다.
 add_executable(VirtualMachine ${SOURCES})
 
 # 실행 파일과 SFML 라이브러리를 연결합니다.
-target_link_libraries(VirtualMachine sfml-graphics sfml-audio ${GTEST_LIBRARIES} pthread)
+target_link_libraries(
+  VirtualMachine
+  sfml-graphics
+  sfml-window
+  sfml-system
+  pthread
+)

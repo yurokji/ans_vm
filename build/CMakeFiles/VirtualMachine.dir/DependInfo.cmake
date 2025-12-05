@@ -8,12 +8,16 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/david/ans_vm/src/main.cpp" "CMakeFiles/VirtualMachine.dir/src/main.cpp.o" "gcc" "CMakeFiles/VirtualMachine.dir/src/main.cpp.o.d"
-  "/home/david/ans_vm/src/vm.cpp" "CMakeFiles/VirtualMachine.dir/src/vm.cpp.o" "gcc" "CMakeFiles/VirtualMachine.dir/src/vm.cpp.o.d"
+  "/home/doldoki/code/ans_vm/src/main.cpp" "CMakeFiles/VirtualMachine.dir/src/main.cpp.o" "gcc" "CMakeFiles/VirtualMachine.dir/src/main.cpp.o.d"
+  "/home/doldoki/code/ans_vm/src/vm.cpp" "CMakeFiles/VirtualMachine.dir/src/vm.cpp.o" "gcc" "CMakeFiles/VirtualMachine.dir/src/vm.cpp.o.d"
   )
 
-# Targets to which this target links.
-set(CMAKE_TARGET_LINKED_INFO_FILES
+# Targets to which this target links which contain Fortran sources.
+set(CMAKE_Fortran_TARGET_LINKED_INFO_FILES
+  )
+
+# Targets to which this target links which contain Fortran sources.
+set(CMAKE_Fortran_TARGET_FORWARD_LINKED_INFO_FILES
   )
 
 # Fortran module output directory.

@@ -6,11 +6,11 @@ TEST(VirtualMachineTest, TestAddOperation) {
     VirtualMachine vm(1024);
 
     // Step 2: Initialize bytecode for ADD operation
-    std::vector<std::pair<ByteCode, std::uint64_t>> bytecode;
-    bytecode.push_back({SETL, vm.encodeRegisterAndImmediate(0, 5)});  // R0 = 5
-    bytecode.push_back({SETL, vm.encodeRegisterAndImmediate(1, 3)});  // R1 = 3
-    bytecode.push_back({ADD, vm.encodeThreeRegisters(0, 0, 1)});  // R0 = R0 + R1
-    bytecode.push_back({HALT, 0});
+    std::vector<Instr> bytecode;
+    bytecode.push_back(makeRI(Op::SET, 0, 5));  // R0 = 5
+    bytecode.push_back(makeRI(Op::SET, 1, 3));  // R1 = 3
+    bytecode.push_back(makeRRR(Op::ADD, 0, 0, 1));  // R0 = R0 + R1
+    bytecode.push_back({Op::HALT, 0, 0, 0, 0});
 
     // Step 3: Run VM
     vm.run(bytecode);
@@ -23,11 +23,11 @@ TEST(VirtualMachineTest, TestAddOperation) {
 
 TEST(VirtualMachineTest, TestMulOperation) {
     VirtualMachine vm(1024);
-    std::vector<std::pair<ByteCode, std::uint64_t>> bytecode;
-    bytecode.push_back({SETL, vm.encodeRegisterAndImmediate(2, 5)});
-    bytecode.push_back({SETL, vm.encodeRegisterAndImmediate(3, 3)});
-    bytecode.push_back({MUL, vm.encodeThreeRegisters(4, 2, 3)});
-    bytecode.push_back({HALT, 0});
+    std::vector<Instr> bytecode;
+    bytecode.push_back(makeRI(Op::SET, 2, 5));
+    bytecode.push_back(makeRI(Op::SET, 3, 3));
+    bytecode.push_back(makeRRR(Op::MUL, 4, 2, 3));
+    bytecode.push_back({Op::HALT, 0, 0, 0, 0});
     vm.run(bytecode);
     EXPECT_EQ(vm.get_int_register(4), 15);
 }
